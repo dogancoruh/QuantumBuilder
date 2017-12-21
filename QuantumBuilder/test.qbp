@@ -1,0 +1,51 @@
+﻿{
+  "name": "test",
+  "projectPath": ".\\",
+  "outputPath": ".\\output\\",
+  "obfuscation": {
+    "enabled": true,
+    "profileName": "confuserEx",
+    "profileParameters": [
+      {
+        "name": "antiILDasmProtection",
+        "value": true
+      },
+      {
+        "name": "antiTamperProtection",
+        "value": true
+      },
+      {
+        "name": "referenceProxyProtection",
+        "value": true
+      }
+    ],
+    "items": [
+      {
+        "selected": true,
+        "fileName": "QuantumBuilder.exe"
+      },
+      {
+        "selected": true,
+        "fileName": "Quantum.Framework.GenericProperties.dll"
+      }
+    ]
+  },
+  "signing": {
+    "enabled": true,
+    "signingProfile": "keystore",
+    "items": [
+      {
+        "selected": true,
+        "fileName": "QuantumBuilder.exe"
+      },
+      {
+        "selected": true,
+        "fileName": "Quantum.Framework.GenericProperties.dll"
+      }
+    ]
+  },
+  "setup": {
+    "enabled": true,
+    "setupProfile": "inno"
+  }
+}
