@@ -26,6 +26,16 @@ namespace QuantumBuilder.Signing.KeystoreSigner
                     ScopeName = "options",
                     CategoryName = "signing",
                     CategoryDisplayName = "Signing",
+                    Name = "tokenPassword",
+                    DisplayName = "Token Password",
+                    Type = GenericPropertyType.String,
+                    DefaultValue = string.Empty
+                },
+                new GenericProperty()
+                {
+                    ScopeName = "options",
+                    CategoryName = "signing",
+                    CategoryDisplayName = "Signing",
                     Name = "signinType",
                     DisplayName = "Signing Type",
                     Type = GenericPropertyType.Enumeration,
