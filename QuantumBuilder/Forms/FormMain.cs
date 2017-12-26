@@ -2,7 +2,6 @@
 using QuantumBuilder.Shared.Data;
 using QuantumBuilder.Shared.Plugin;
 using QuantumBuilder.Shared.Utilities;
-using QuantumBuilder.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +23,7 @@ namespace QuantumBuilder
 
         BindingSource bindingSourceObfuscationItems;
         BindingSource bindingSourceSigningItems;
+        BindingSource bindingSourceSetupItems;
 
         public FormMain()
         {
@@ -38,7 +38,7 @@ namespace QuantumBuilder
         {
             PluginManager.Instance.LoadPluginsFromPath(AppDomain.CurrentDomain.BaseDirectory);
 
-            // obfuscate profile names
+            // obfuscate plugin names
             comboBoxObfuscationProfile.DisplayMember = "Key";
             comboBoxObfuscationProfile.ValueMember = "Value";
 
@@ -46,13 +46,21 @@ namespace QuantumBuilder
             foreach (var pluginInfo in pluginInfos)
                 comboBoxObfuscationProfile.Items.Add(new KeyValuePair<string, object>(pluginInfo.Plugin.DisplayName, pluginInfo));
 
-            // signing profile names
+            // signing plugin names
             comboBoxSigningProfile.DisplayMember = "Key";
             comboBoxSigningProfile.ValueMember = "Value";
 
             pluginInfos = PluginManager.Instance.GetPluginInfosForType(PluginType.Signing);
             foreach (var pluginInfo in pluginInfos)
                 comboBoxSigningProfile.Items.Add(new KeyValuePair<string, object>(pluginInfo.Plugin.DisplayName, pluginInfo));
+
+            // setup plugin names
+            comboBoxSetupProfile.DisplayMember = "Key";
+            comboBoxSetupProfile.ValueMember = "Value";
+
+            pluginInfos = PluginManager.Instance.GetPluginInfosForType(PluginType.Setup);
+            foreach (var pluginInfo in pluginInfos)
+                comboBoxSetupProfile.Items.Add(new KeyValuePair<string, object>(pluginInfo.Plugin.DisplayName, pluginInfo));
         }
 
         private void InitializeProject()
@@ -150,6 +158,40 @@ namespace QuantumBuilder
             });
 
             dataGridViewSigningItems.DataSource = bindingSourceSigningItems;
+
+            // setup
+            bindingSourceSetupItems = new BindingSource();
+            bindingSourceSetupItems.CurrentChanged += BindingSourceSetupItems_CurrentChanged;
+            bindingSourceSetupItems.DataSource = project.Setup.Items;
+
+            dataGridViewSetupItems.AutoSize = true;
+            dataGridViewSetupItems.AutoGenerateColumns = false;
+            dataGridViewSetupItems.AllowUserToAddRows = false;
+            dataGridViewSetupItems.AllowUserToDeleteRows = false;
+            dataGridViewSetupItems.AllowUserToResizeRows = false;
+            dataGridViewSetupItems.RowHeadersVisible = false;
+            dataGridViewSetupItems.AutoGenerateColumns = false;
+            dataGridViewSetupItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            dataGridViewSetupItems.Columns.Add(new DataGridViewCheckBoxColumn()
+            {
+                DataPropertyName = "Selected",
+                HeaderText = string.Empty,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                Width = 32
+            });
+
+            dataGridViewSetupItems.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                DataPropertyName = "FileName",
+                HeaderText = "File Name",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Resizable = DataGridViewTriState.False,
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                ReadOnly = true
+            });
+
+            dataGridViewSigningItems.DataSource = bindingSourceSigningItems;
         }
 
         private void RefreshControls()
@@ -173,7 +215,7 @@ namespace QuantumBuilder
             var index = 0;
             foreach (var pluginInfoObfuscation in pluginInfos)
             {
-                if (pluginInfoObfuscation.Plugin.Name == project.Obfuscation.ProfileName)
+                if (pluginInfoObfuscation.Plugin.Name == project.Obfuscation.PluginName)
                     comboBoxObfuscationProfile.SelectedIndex = index;
 
                 index++;
@@ -182,8 +224,6 @@ namespace QuantumBuilder
             bindingSourceObfuscationItems.DataSource = project.Obfuscation.Items;
 
             // show/hide obfuscation options panel
-            checkBoxSigning.Checked = project.Signing.Enabled;
-
             if (comboBoxObfuscationProfile.SelectedItem != null)
             {
                 var keyValuePair = (KeyValuePair<string, object>)comboBoxObfuscationProfile.SelectedItem;
@@ -198,7 +238,7 @@ namespace QuantumBuilder
             index = 0;
             foreach (var pluginInfoSigning in pluginInfos)
             {
-                if (pluginInfoSigning.Plugin.Name == project.Signing.ProfileName)
+                if (pluginInfoSigning.Plugin.Name == project.Signing.PluginName)
                     comboBoxSigningProfile.SelectedIndex = index;
 
                 index++;
@@ -213,11 +253,39 @@ namespace QuantumBuilder
                 var pluginInfoSigning_ = (PluginInfo)keyValuePair.Value;
                 groupBoxSigningOptions.Visible = pluginInfoSigning_.PluginProperties.Count > 0;
             }
+
+            // setup
+            checkBoxSetup.Checked = project.Setup.Enabled;
+
+            pluginInfos = PluginManager.Instance.GetPluginInfosForType(PluginType.Setup);
+            index = 0;
+            foreach (var pluginInfoSetup in pluginInfos)
+            {
+                if (pluginInfoSetup.Plugin.Name == project.Setup.PluginName)
+                    comboBoxSetupProfile.SelectedIndex = index;
+
+                index++;
+            }
+
+            bindingSourceSetupItems.DataSource = project.Setup.Items;
+
+            // show/hide setup options panel
+            if (comboBoxSetupProfile.SelectedItem != null)
+            {
+                var keyValuePair = (KeyValuePair<string, object>)comboBoxSetupProfile.SelectedItem;
+                var pluginInfoSetup_ = (PluginInfo)keyValuePair.Value;
+                groupBoxSetupOptions.Visible = pluginInfoSetup_.PluginProperties.Count > 0;
+            }
         }
 
         private void BindingSourceObfuscationItems_CurrentChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void BindingSourceSetupItems_CurrentChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void Document_OnDocumentFileNameChanged(object sender, Document.Framework.Event.DocumentFileNameChangedEventArgs e)
@@ -304,9 +372,9 @@ namespace QuantumBuilder
             };
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                ProjectLoader.Save(e.FileName, project);
+                ProjectLoader.Save(dialog.FileName, project);
 
-                document.DocumentFileName = e.FileName;
+                document.DocumentFileName = dialog.FileName;
                 document.IsDocumentModified = false;
             }
         }
@@ -327,8 +395,8 @@ namespace QuantumBuilder
 
             textBoxProjectPath.Text = project.ProjectPath;
             textBoxOutputPath.Text = project.OutputPath;
-            comboBoxObfuscationProfile.SelectedValue = project.Obfuscation.ProfileName;
-            comboBoxSigningProfile.SelectedValue = project.Signing.ProfileName;
+            comboBoxObfuscationProfile.SelectedValue = project.Obfuscation.PluginName;
+            comboBoxSigningProfile.SelectedValue = project.Signing.PluginName;
 
             RefreshProject();
 
@@ -456,10 +524,10 @@ namespace QuantumBuilder
             var pluginInfo = (PluginInfo)keyValuePair.Value;
 
             genericPropertyCheckListBoxObfuscation.Properties = pluginInfo.PluginProperties;
-            genericPropertyCheckListBoxObfuscation.Values = project.Obfuscation.ProfileParameters;
+            genericPropertyCheckListBoxObfuscation.Values = project.Obfuscation.PluginParameters;
             genericPropertyCheckListBoxObfuscation.Refresh();
 
-            project.Obfuscation.ProfileName = pluginInfo.Plugin.Name;
+            project.Obfuscation.PluginName = pluginInfo.Plugin.Name;
 
             if (pluginInfo.PluginProperties != null)
                 groupBoxObfuscationOptions.Visible = pluginInfo.PluginProperties.Count > 0;
@@ -497,7 +565,7 @@ namespace QuantumBuilder
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            LoadProject("c:\\test.qbp");
+            LoadProject(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.qbp"));
         }
 
         private void buildAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -588,11 +656,12 @@ namespace QuantumBuilder
             var keyValuePair = (KeyValuePair<string, object>)comboBoxSigningProfile.SelectedItem;
             var pluginInfo = (PluginInfo)keyValuePair.Value;
 
+            genericPropertyListControlSigning.Options.ViewMode = pluginInfo.Plugin.ParametersDisplayType.ToViewMode();
             genericPropertyListControlSigning.Properties = pluginInfo.PluginProperties;
-            genericPropertyListControlSigning.Values = project.Signing.ProfileParameters;
-            genericPropertyListControlSigning.Refresh();
+            genericPropertyListControlSigning.Values = project.Signing.PluginParameters;
+            genericPropertyListControlSigning.RefreshItems();
 
-            project.Signing.ProfileName = pluginInfo.Plugin.Name;
+            project.Signing.PluginName = pluginInfo.Plugin.Name;
 
             if (pluginInfo.PluginProperties != null)
                 groupBoxSigningOptions.Visible = pluginInfo.PluginProperties.Count > 0;
@@ -656,6 +725,37 @@ namespace QuantumBuilder
 
         private void genericPropertyListControlSigning_OnPropertyValueChanged(object sender, Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Events.PropertyValueChangeEventArgs e)
         {
+            document.IsDocumentModified = true;
+        }
+
+        private void checkBoxSetup_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxSetupOptions.Enabled =
+            groupBoxSetupItems.Enabled =
+            comboBoxSetupProfile.Enabled = checkBoxSetup.Checked;
+
+            document.IsDocumentModified = true;
+
+            project.Setup.Enabled = checkBoxSetup.Checked;
+        }
+
+        private void comboBoxSetupProfile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var keyValuePair = (KeyValuePair<string, object>)comboBoxSetupProfile.SelectedItem;
+            var pluginInfo = (PluginInfo)keyValuePair.Value;
+
+            genericPropertyListControlSetup.Options.ViewMode = pluginInfo.Plugin.ParametersDisplayType.ToViewMode();
+            genericPropertyListControlSetup.Properties = pluginInfo.PluginProperties;
+            genericPropertyListControlSetup.Values = project.Setup.PluginParameters;
+            genericPropertyListControlSetup.RefreshItems();
+
+            project.Setup.PluginName = pluginInfo.Plugin.Name;
+
+            if (pluginInfo.PluginProperties != null)
+                groupBoxSetupOptions.Visible = pluginInfo.PluginProperties.Count > 0;
+            else
+                groupBoxSetupOptions.Visible = false;
+
             document.IsDocumentModified = true;
         }
     }

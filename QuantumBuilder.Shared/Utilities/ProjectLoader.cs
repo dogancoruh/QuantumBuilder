@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuantumBuilder.Utilities
+namespace QuantumBuilder.Shared.Utilities
 {
     public class ProjectLoader
     {
@@ -31,15 +31,16 @@ namespace QuantumBuilder.Utilities
                 var jObjectObfuscation = (JObject)jObject["obfuscation"];
 
                 project.Obfuscation.Enabled = JObjectHelper.GetBoolValue(jObjectObfuscation, "enabled");
-                project.Obfuscation.ProfileName = JObjectHelper.GetStringValue(jObjectObfuscation, "profileName");
 
-                if (jObjectObfuscation["profileParameters"] != null)
+                project.Obfuscation.PluginName = JObjectHelper.GetStringValue(jObjectObfuscation, "pluginName");
+
+                if (jObjectObfuscation["pluginParameters"] != null)
                 {
-                    var pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Obfuscation.ProfileName);
+                    var pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Obfuscation.PluginName);
                     if (pluginInfo != null)
                     {
                         var pluginProperties = pluginInfo.Plugin.GetProperties();
-                        project.Obfuscation.ProfileParameters = GenericPropertySerializer.DeserializeFromJArrayToDictionary(pluginProperties, (JArray)jObjectObfuscation["profileParameters"]);
+                        project.Obfuscation.PluginParameters = GenericPropertySerializer.DeserializeFromJArrayToDictionary(pluginProperties, (JArray)jObjectObfuscation["pluginParameters"]);
                     }
                 }
 
@@ -65,7 +66,17 @@ namespace QuantumBuilder.Utilities
 
                 project.Signing.Enabled = JObjectHelper.GetBoolValue(jObjectSigning, "enabled");
 
-                project.Signing.ProfileName = JObjectHelper.GetStringValue(jObjectSigning, "profileName");
+                project.Signing.PluginName = JObjectHelper.GetStringValue(jObjectSigning, "pluginName");
+
+                if (jObjectSigning["pluginParameters"] != null)
+                {
+                    var pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Signing.PluginName);
+                    if (pluginInfo != null)
+                    {
+                        var pluginProperties = pluginInfo.Plugin.GetProperties();
+                        project.Signing.PluginParameters = GenericPropertySerializer.DeserializeFromJArrayToDictionary(pluginProperties, (JArray)jObjectSigning["pluginParameters"]);
+                    }
+                }
 
                 if (jObjectSigning["items"] != null)
                 {
@@ -77,6 +88,40 @@ namespace QuantumBuilder.Utilities
                         {
                             Selected = JObjectHelper.GetBoolValue(jObjectSigningItem, "selected"),
                             FileName = JObjectHelper.GetStringValue(jObjectSigningItem, "fileName")
+                        });
+                    }
+                }
+            }
+
+            // setup
+            if (jObject["setup"] != null)
+            {
+                var jObjectSetup = (JObject)jObject["setup"];
+
+                project.Setup.Enabled = JObjectHelper.GetBoolValue(jObjectSetup, "enabled");
+
+                project.Setup.PluginName = JObjectHelper.GetStringValue(jObjectSetup, "pluginName");
+
+                if (jObjectSetup["pluginParameters"] != null)
+                {
+                    var pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Setup.PluginName);
+                    if (pluginInfo != null)
+                    {
+                        var pluginProperties = pluginInfo.Plugin.GetProperties();
+                        project.Setup.PluginParameters = GenericPropertySerializer.DeserializeFromJArrayToDictionary(pluginProperties, (JArray)jObjectSetup["pluginParameters"]);
+                    }
+                }
+
+                if (jObjectSetup["items"] != null)
+                {
+                    var jArraySetupItems = (JArray)jObjectSetup["items"];
+
+                    foreach (JObject jObjectSetupItem in jArraySetupItems)
+                    {
+                        project.Setup.Items.Add(new SetupItem()
+                        {
+                            Selected = JObjectHelper.GetBoolValue(jObjectSetupItem, "selected"),
+                            FileName = JObjectHelper.GetStringValue(jObjectSetupItem, "fileName")
                         });
                     }
                 }
@@ -98,13 +143,13 @@ namespace QuantumBuilder.Utilities
             var jObjectObfuscation = new JObject()
             {
                 ["enabled"] = project.Obfuscation.Enabled,
-                ["profileName"] = project.Obfuscation.ProfileName
+                ["pluginName"] = project.Obfuscation.PluginName
             };
-            var pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Obfuscation.ProfileName);
+            var pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Obfuscation.PluginName);
             if (pluginInfo != null)
             {
                 var pluginProperties = pluginInfo.Plugin.GetProperties();
-                jObjectObfuscation["profileParameters"] = GenericPropertySerializer.SerializeFromDictionaryToJArray(pluginProperties, project.Obfuscation.ProfileParameters);
+                jObjectObfuscation["pluginParameters"] = GenericPropertySerializer.SerializeFromDictionaryToJArray(pluginProperties, project.Obfuscation.PluginParameters);
             }
 
             var jArrayObfuscationItems = new JArray();
@@ -124,13 +169,13 @@ namespace QuantumBuilder.Utilities
             var jObjectSigning = new JObject()
             {
                 ["enabled"] = project.Signing.Enabled,
-                ["profileName"] = project.Signing.ProfileName
+                ["pluginName"] = project.Signing.PluginName
             };
-            pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Obfuscation.ProfileName);
+            pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Signing.PluginName);
             if (pluginInfo != null)
             {
                 var pluginProperties = pluginInfo.Plugin.GetProperties();
-                jObjectSigning["profileParameters"] = GenericPropertySerializer.SerializeFromDictionaryToJArray(pluginProperties, project.Signing.ProfileParameters);
+                jObjectSigning["pluginParameters"] = GenericPropertySerializer.SerializeFromDictionaryToJArray(pluginProperties, project.Signing.PluginParameters);
             }
 
             var jArraySigningItems = new JArray();
@@ -146,6 +191,33 @@ namespace QuantumBuilder.Utilities
 
             jObjectProject["signing"] = jObjectSigning;
 
+            // setup
+            var jObjectSetup = new JObject()
+            {
+                ["enabled"] = project.Setup.Enabled,
+                ["pluginName"] = project.Setup.PluginName
+            };
+            pluginInfo = PluginManager.Instance.GetPluginInfoByName(project.Setup.PluginName);
+            if (pluginInfo != null)
+            {
+                var pluginProperties = pluginInfo.Plugin.GetProperties();
+                jObjectSetup["pluginParameters"] = GenericPropertySerializer.SerializeFromDictionaryToJArray(pluginProperties, project.Signing.PluginParameters);
+            }
+
+            var jArraySetupItems = new JArray();
+            foreach (var signinItem in project.Signing.Items)
+            {
+                jArraySetupItems.Add(new JObject()
+                {
+                    ["selected"] = signinItem.Selected,
+                    ["fileName"] = signinItem.FileName
+                });
+            }
+            jObjectSetup["items"] = jArraySetupItems;
+
+            jObjectProject["setup"] = jObjectSetup;
+
+            // write all into output file
             File.WriteAllText(fileName, jObjectProject.ToString(), Encoding.UTF8);
         }
     }

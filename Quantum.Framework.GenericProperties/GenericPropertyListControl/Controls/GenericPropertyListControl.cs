@@ -18,9 +18,9 @@ using Quantum.Framework.GenericProperties.GenericPropertyListControl.Data;
 
 namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl
 {
-    public partial class GenericPropertyListControl : ScrollableControl
+    public partial class GenericPropertyListControl : UserControl
     {
-        const int CATEGORY_TITLE_SEPERATOR_GAP = 5;
+        const int CATEGORY_TITLE_SEPERATOR_GAP = 7;
         const int ITEM_OFFSET = 8;
         const int ITEM_LABEL_OFFSET = 4;
         const int ITEM_EDITOR_GAP = 2;
@@ -29,9 +29,9 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
         #region Private Variables
 
-        private List<Control> controls;
-
+        //private ScrollableControl container;
         private List<string> categoryNames;
+        private List<LayoutItem> layoutItems;
 
         #endregion
 
@@ -60,16 +60,33 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
         public GenericPropertyListControl()
         {
-            controls = new List<Control>();
+            InitializeComponent();
+
+            //container = new ScrollableControl
+            //{
+            //    Dock = DockStyle.Fill,
+            //    AutoScroll = true,
+            //    AutoScrollMargin = new Size(0, 0),
+            //    AutoScrollMinSize = new Size(0, 0)
+            //};
+            //Controls.Add(container);
+
+            layoutItems = new List<LayoutItem>();
 
             Margin = new Padding(0);
             Padding = new Padding(0);
+            AutoScroll = true;
             AutoScrollMargin = new Size(0, 0);
             AutoScrollMinSize = new Size(0, 0);
 
             Options = new GenericPropertyListOptions();
 
-            InitializeComponent();
+            Layout += GenericPropertyListControl_Layout;
+        }
+
+        private void GenericPropertyListControl_Layout(object sender, LayoutEventArgs e)
+        {
+            LayoutControls();
         }
 
         protected override CreateParams CreateParams
@@ -94,14 +111,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
             foreach (var categoryName in categoryNames)
             {
-                var panelTitle = new Panel()
-                {
-                    BorderStyle = BorderStyle.None,
-                    //BackColor = Color.Red,
-                    Location = new Point(0, yOffset),
-                    Size = new Size(Width, Options.ItemHeight)
-                };
-                Controls.Add(panelTitle);
+                var layoutPropertyCategory = new LayoutPropertyCategory();
 
                 // category title
                 var categoryLabel = new Label()
@@ -114,16 +124,18 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         ControlType = ControlType.CategorySeperator
                     }
                 };
-                panelTitle.Controls.Add(categoryLabel);
-                categoryLabel.Location = new Point(Options.CategoryLeftMargin, Options.ItemHeight / 2 - categoryLabel.Height / 2);
+                Controls.Add(categoryLabel);
+                layoutPropertyCategory.Label = categoryLabel;
+
+                categoryLabel.Location = new Point(Options.CategoryLeftMargin, yOffset + (Options.ItemHeight / 2 - categoryLabel.Height / 2));
                 categoryLabel.Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, categoryLabel.Height);
 
-                yOffset += categoryLabel.Height + CATEGORY_TITLE_SEPERATOR_GAP;
+                yOffset += categoryLabel.Height + (Options.ItemHeight / 2 - categoryLabel.Height / 2) + CATEGORY_TITLE_SEPERATOR_GAP;
 
                 // category seperator
                 var categorySeperator = new Panel()
                 {
-                    Location = new Point(Options.CategoryLeftMargin, Options.ItemHeight - 1),
+                    Location = new Point(Options.CategoryLeftMargin, yOffset),
                     Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, 1),
                     BackColor = Color.Black,
                     Tag = new ItemControlInfo()
@@ -131,13 +143,20 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         ControlType = ControlType.CategorySeperator
                     }
                 };
-                panelTitle.Controls.Add(categorySeperator);
+                Controls.Add(categorySeperator);
+                layoutPropertyCategory.Seperator = categorySeperator;
+
+                layoutItems.Add(layoutPropertyCategory);
 
                 yOffset += categorySeperator.Height + ITEM_OFFSET;
 
-                var items = properties.Where(x => x.CategoryName == categoryName).ToList();
+                // iterate for each property of category
+                var items = properties.Where(x => x.CategoryName == categoryName && x.Browsable).ToList();
                 foreach (var item in items)
                 {
+                    // layout property
+                    var layoutProperty = new LayoutProperty();
+
                     // label
                     var itemLabel = new Label()
                     {
@@ -153,7 +172,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                     };
 
                     Controls.Add(itemLabel);
-                    controls.Add(itemLabel);
+                    layoutProperty.Label = itemLabel;
 
                     itemLabel.Location = new Point(Options.ItemLeftMargin, yOffset + (Options.ItemHeight / 2 - itemLabel.Size.Height / 2));
                     itemLabel.Size = new Size(seperatorXOffset - Options.ItemLeftMargin - Options.SeperatorPadding, itemLabel.Size.Height);
@@ -176,7 +195,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                             editorString.TextChanged += TextBox_TextChanged;
 
                             Controls.Add(editorString);
-                            controls.Add(editorString);
+                            layoutProperty.Control = editorString;
 
                             editorString.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - editorString.Size.Height / 2));
                             editorString.Size = new Size(itemEditWidth, editorString.Size.Height);
@@ -198,7 +217,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                             editorInteger.Maximum = Convert.ToInt32(item.MaximumValue);
 
                             Controls.Add(editorInteger);
-                            controls.Add(editorInteger);
+                            layoutProperty.Control = editorInteger;
 
                             editorInteger.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorInteger.Size.Height / 2);
                             editorInteger.Size = new Size(itemEditWidth, editorInteger.Size.Height);
@@ -221,7 +240,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                             editorDecimal.Maximum = Convert.ToDecimal(item.MaximumValue);
 
                             Controls.Add(editorDecimal);
-                            controls.Add(editorDecimal);
+                            layoutProperty.Control = editorDecimal;
 
                             editorDecimal.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorDecimal.Size.Height / 2);
                             editorDecimal.Size = new Size(itemEditWidth, editorDecimal.Size.Height);
@@ -242,7 +261,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                             editorBoolean.CheckedChanged += CheckEdit_CheckedChanged;
 
                             Controls.Add(editorBoolean);
-                            controls.Add(editorBoolean);
+                            layoutProperty.Control = editorBoolean;
 
                             editorBoolean.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorBoolean.Size.Height / 2);
                             editorBoolean.Size = new Size(itemEditWidth, editorBoolean.Size.Height);
@@ -278,7 +297,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                             editorEnumeration.SelectedValueChanged += ComboBoxEdit_SelectedValueChanged;
 
                             Controls.Add(editorEnumeration);
-                            controls.Add(editorEnumeration);
+                            layoutProperty.Control = editorEnumeration;
 
                             editorEnumeration.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorEnumeration.Size.Height / 2);
                             editorEnumeration.Size = new Size(itemEditWidth, editorEnumeration.Size.Height);
@@ -299,7 +318,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                             editorColor.OnColorChanged += EditorColor_ColorChanged;
 
                             Controls.Add(editorColor);
-                            controls.Add(editorColor);
+                            layoutProperty.Control = editorColor;
 
                             editorColor.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - editorColor.Size.Height / 2));
                             editorColor.Size = new Size(itemEditWidth, editorColor.Size.Height);
@@ -321,7 +340,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                             editorPath.OnButtonClick += EditorPath_OnButtonClick;
 
                             Controls.Add(editorPath);
-                            controls.Add(editorPath);
+                            layoutProperty.Control = editorPath;
 
                             editorPath.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - editorPath.Size.Height / 2));
                             editorPath.Size = new Size(itemEditWidth, editorPath.Size.Height);
@@ -330,6 +349,8 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         default:
                             break;
                     }
+
+                    layoutPropertyCategory.Items.Add(layoutProperty);
 
                     yOffset += Options.ItemHeight;
                 }
@@ -416,6 +437,8 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
             foreach (var item in properties)
             {
+                var layoutProperty = new LayoutProperty();
+
                 // label
                 var itemLabel = new Label()
                 {
@@ -431,7 +454,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                 };
 
                 Controls.Add(itemLabel);
-                controls.Add(itemLabel);
+                layoutProperty.Label = itemLabel;
 
                 itemLabel.Location = new Point(Options.ItemLeftMargin, yOffset + (Options.ItemHeight / 2 - itemLabel.Size.Height / 2));
                 itemLabel.Size = new Size(seperatorXOffset - Options.ItemLeftMargin - Options.SeperatorPadding, itemLabel.Size.Height);
@@ -454,7 +477,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         editorString.TextChanged += TextBox_TextChanged;
 
                         Controls.Add(editorString);
-                        controls.Add(editorString);
+                        layoutProperty.Control = editorString;
 
                         editorString.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - editorString.Size.Height / 2));
                         editorString.Size = new Size(itemEditWidth, editorString.Size.Height);
@@ -476,7 +499,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         editorInteger.Maximum = Convert.ToInt32(item.MaximumValue);
 
                         Controls.Add(editorInteger);
-                        controls.Add(editorInteger);
+                        layoutProperty.Control = editorInteger;
 
                         editorInteger.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorInteger.Size.Height / 2);
                         editorInteger.Size = new Size(itemEditWidth, editorInteger.Size.Height);
@@ -499,7 +522,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         editorDecimal.Maximum = Convert.ToDecimal(item.MaximumValue);
 
                         Controls.Add(editorDecimal);
-                        controls.Add(editorDecimal);
+                        layoutProperty.Control = editorDecimal;
 
                         editorDecimal.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorDecimal.Size.Height / 2);
                         editorDecimal.Size = new Size(itemEditWidth, editorDecimal.Size.Height);
@@ -520,7 +543,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         editorBoolean.CheckedChanged += CheckEdit_CheckedChanged;
 
                         Controls.Add(editorBoolean);
-                        controls.Add(editorBoolean);
+                        layoutProperty.Control = editorBoolean;
 
                         editorBoolean.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorBoolean.Size.Height / 2);
                         editorBoolean.Size = new Size(itemEditWidth, editorBoolean.Size.Height);
@@ -556,7 +579,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         editorEnumeration.SelectedValueChanged += ComboBoxEdit_SelectedValueChanged;
 
                         Controls.Add(editorEnumeration);
-                        controls.Add(editorEnumeration);
+                        layoutProperty.Control = editorEnumeration;
 
                         editorEnumeration.Location = new Point(seperatorXOffset, yOffset + Options.ItemHeight / 2 - editorEnumeration.Size.Height / 2);
                         editorEnumeration.Size = new Size(itemEditWidth, editorEnumeration.Size.Height);
@@ -577,7 +600,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         editorColor.OnColorChanged += EditorColor_ColorChanged;
 
                         Controls.Add(editorColor);
-                        controls.Add(editorColor);
+                        layoutProperty.Control = editorColor;
 
                         editorColor.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - editorColor.Size.Height / 2));
                         editorColor.Size = new Size(itemEditWidth, editorColor.Size.Height);
@@ -599,7 +622,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         editorPath.OnButtonClick += EditorPath_OnButtonClick;
 
                         Controls.Add(editorPath);
-                        controls.Add(editorPath);
+                        layoutProperty.Control = editorPath;
 
                         editorPath.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - editorPath.Size.Height / 2));
                         editorPath.Size = new Size(itemEditWidth, editorPath.Size.Height);
@@ -609,6 +632,8 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                         break;
                 }
 
+                layoutItems.Add(layoutProperty);
+
                 yOffset += Options.ItemHeight;
             }
 
@@ -616,12 +641,10 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                 Height = yOffset;
         }
 
-        public new void Refresh()
+        public void RefreshItems()
         {
             if (Properties != null && Properties.Count > 0)
             {
-                SuspendLayout();
-
                 ClearListControls();
 
                 if (Options.ViewMode == ViewMode.CategoryList)
@@ -631,70 +654,120 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                 else if (Options.ViewMode == ViewMode.List)
                     CreateList();
 
-                ResumeLayout();
+                LayoutControls();
             }
         }
 
         private void ClearListControls()
         {
-            foreach (var control in controls)
-                Controls.Remove(control);
-        }
-
-        private void LayoutControls()
-        {
-        /*
-            var offsetY = 0;
-
-            if (Options.ViewMode == ViewMode.CategoryList && items.Count > 0)
+            foreach (var layoutItem in layoutItems)
             {
-                offsetY += Options.CategoryTopMargin;
+                if (layoutItem is LayoutPropertyCategory layoutPropertyCategory)
+                {
+                    Controls.Remove(layoutPropertyCategory.Label);
+                    Controls.Remove(layoutPropertyCategory.Seperator);
 
-
-                if (controls[ControlType.CategoryLabel] != null &&
-                    controls[ControlType.CategorySeperator] != null)
-            {
-                // category labels and seperators
-                var widthForCategory = Width - Options.CategoryLeftMargin - Options.CategoryRightMargin;
-
-                if (VerticalScroll.Visible)
-                    widthForCategory -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
-
-                foreach (var categoryLabel in categoryLabels)
-                    categoryLabel.Width = widthForCategory;
-                foreach (var categorySeperator in categorySeperators)
-                    categorySeperator.Width = widthForCategory;
+                    foreach (LayoutProperty layoutProperty in layoutPropertyCategory.Items)
+                    {
+                        Controls.Remove(layoutProperty.Label);
+                        Controls.Remove(layoutProperty.Control);
+                    }
+                }
+                else if (layoutItem is LayoutProperty layoutProperty)
+                {
+                    Controls.Remove(layoutProperty.Label);
+                    Controls.Remove(layoutProperty.Control);
+                }
             }
 
-            if (itemLabels != null && itemEdits != null)
+            layoutItems.Clear();
+        }
+
+        public void LayoutControls()
+        {
+            if (Options.ViewMode == ViewMode.CategoryList)
+                LayoutCategoryList();
+            else if (Options.ViewMode == ViewMode.List)
+                LayoutList();
+        }
+
+        private void LayoutCategoryList()
+        {
+            // calculate seperator
+            var seperatorXOffset = Options.SeperatorOffset;
+            if (Options.SeperatorOffsetType == SeperatorOffsetType.Percent)
+                seperatorXOffset = MathHelper.RoundInt((double)Width * (double)seperatorXOffset / (double)100);
+
+            // layout categories and items
+            var yOffset = Options.CategoryTopMargin;
+
+            foreach (var layoutItem in layoutItems)
             {
-                // item labels and edits
-                var widthForItem = Width - Options.ItemLeftMargin - Options.ItemRightMargin;
-
-                var seperatorOffsetX = Options.SeperatorOffset;
-                if (Options.SeperatorOffsetType == SeperatorOffsetType.Percent)
-                    seperatorOffsetX = MathHelper.RoundInt((double)Width * (double)seperatorOffsetX / (double)100);
-
-                if (VerticalScroll.Visible)
-                    seperatorOffsetX -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
-
-                foreach (var itemLabel in itemLabels)
-                    itemLabel.Width = seperatorOffsetX - Options.ItemLeftMargin - Options.SeperatorPadding;
-                foreach (var itemEdit in itemEdits)
+                if (layoutItem is LayoutPropertyCategory layoutPropertyCategory)
                 {
-                    itemEdit.Left = seperatorOffsetX;
+                    // layout category label
+                    var categoryLabel = layoutPropertyCategory.Label;
+                    categoryLabel.Location = new Point(Options.CategoryLeftMargin, yOffset + (Options.ItemHeight / 2 - categoryLabel.Height / 2));
+                    categoryLabel.Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, categoryLabel.Height);
+                    yOffset += categoryLabel.Height + (Options.ItemHeight / 2 - categoryLabel.Height / 2) + CATEGORY_TITLE_SEPERATOR_GAP;
 
-                    var editWidth = Width - Options.ItemRightMargin - seperatorOffsetX;
-                    if (VerticalScroll.Visible)
-                        editWidth -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
+                    // layout category seperator
+                    var categorySeperator = layoutPropertyCategory.Seperator;
+                    categorySeperator.Location = new Point(Options.CategoryLeftMargin, yOffset);
+                    categorySeperator.Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, 1);
+                    yOffset += categorySeperator.Height + ITEM_OFFSET;
 
-                    itemEdit.Width = editWidth;
+                    foreach (LayoutProperty layoutProperty in layoutPropertyCategory.Items)
+                    {
+                        var itemLabel = layoutProperty.Label;
+                        itemLabel.Location = new Point(Options.ItemLeftMargin, yOffset + (Options.ItemHeight / 2 - itemLabel.Size.Height / 2));
+                        itemLabel.Size = new Size(seperatorXOffset - Options.ItemLeftMargin - Options.SeperatorPadding, itemLabel.Size.Height);
+
+                        var itemEditWidth = Width - seperatorXOffset - Options.ItemRightMargin;
+
+                        var itemControl = layoutProperty.Control;
+                        itemControl.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - itemControl.Size.Height / 2));
+                        itemControl.Size = new Size(itemEditWidth, itemControl.Size.Height);
+
+                        yOffset += Options.ItemHeight;
+                    }
                 }
             }
 
             if (Options.AutoSize)
-                Height = offsetY + 50;
-        */
+                Height = yOffset;
+        }
+
+        private void LayoutList()
+        {
+            // calculate seperator
+            var seperatorXOffset = Options.SeperatorOffset;
+            if (Options.SeperatorOffsetType == SeperatorOffsetType.Percent)
+                seperatorXOffset = MathHelper.RoundInt((double)Width * (double)seperatorXOffset / (double)100);
+
+            // layout categories and items
+            var yOffset = Options.CategoryTopMargin;
+
+            foreach (var layoutItem in layoutItems)
+            {
+                if (layoutItem is LayoutProperty layoutProperty)
+                {
+                    var itemLabel = layoutProperty.Label;
+                    itemLabel.Location = new Point(Options.ItemLeftMargin, yOffset + (Options.ItemHeight / 2 - itemLabel.Size.Height / 2));
+                    itemLabel.Size = new Size(seperatorXOffset - Options.ItemLeftMargin - Options.SeperatorPadding, itemLabel.Size.Height);
+
+                    var itemEditWidth = Width - seperatorXOffset - Options.ItemRightMargin;
+
+                    var itemControl = layoutProperty.Control;
+                    itemControl.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - itemControl.Size.Height / 2));
+                    itemControl.Size = new Size(itemEditWidth, itemControl.Size.Height);
+
+                    yOffset += Options.ItemHeight;
+                }
+            }
+
+            if (Options.AutoSize)
+                Height = yOffset;
         }
 
         #region Control Events
@@ -881,12 +954,6 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
             base.OnResize(e);
 
             //LayoutControls();
-        }
-
-        private void ClearControls()
-        {
-            foreach (var control in controls)
-                Controls.Remove(control);
         }
     }
 }

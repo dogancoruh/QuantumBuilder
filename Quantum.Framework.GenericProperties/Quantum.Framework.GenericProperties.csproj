@@ -57,7 +57,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GenericPropertyListControl\Controls\GenericPropertyListControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GenericPropertyListControl\Controls\GenericPropertyListControl.Designer.cs">
       <DependentUpon>GenericPropertyListControl.cs</DependentUpon>
@@ -65,6 +65,9 @@
     <Compile Include="GenericPropertyListControl\Data\ButtonInfo.cs" />
     <Compile Include="GenericPropertyListControl\Data\ControlInfo.cs" />
     <Compile Include="GenericPropertyListControl\Data\GenericPropertyListOptions.cs" />
+    <Compile Include="GenericPropertyListControl\Data\LayoutPropertyCategory.cs" />
+    <Compile Include="GenericPropertyListControl\Data\LayoutItem.cs" />
+    <Compile Include="GenericPropertyListControl\Data\LayoutProperty.cs" />
     <Compile Include="GenericPropertyListControl\Data\UserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>

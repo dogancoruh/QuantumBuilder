@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuantumBuilder.Utilities
+namespace QuantumBuilder.Shared.Utilities
 {
     public static class JObjectHelper
     {

@@ -119,5 +119,22 @@ namespace GenericPropertiesListControlTest
         {
             listBox1.Items.Add(e.Property.Name + " " + e.Property.Value);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            genericPropertyListControl1.Options.ViewMode = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.ViewMode.List;
+            genericPropertyListControl1.Refresh();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            genericPropertyListControl1.Options.ViewMode = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.ViewMode.CategoryList;
+            genericPropertyListControl1.Refresh();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            genericPropertyListControl1.LayoutControls();
+        }
     }
 }

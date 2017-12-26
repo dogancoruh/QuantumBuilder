@@ -15,10 +15,12 @@ namespace QuantumBuilder.Shared.Data
         public Obfuscation Obfuscation { get; set; }
         public Signing Signing { get; set; }
 
+        public Setup Setup { get; set; }
         public Project()
         {
             Obfuscation = new Obfuscation();
             Signing = new Signing();
+            Setup = new Setup();
         }
     }
 }

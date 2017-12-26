@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Project.cs" />
+    <Compile Include="Data\Setup.cs" />
+    <Compile Include="Data\SetupItem.cs" />
     <Compile Include="Data\Signing.cs" />
     <Compile Include="Data\SigningItem.cs" />
     <Compile Include="Data\SigningKeySource.cs" />
@@ -55,12 +57,16 @@
     <Compile Include="Plugin\Plugin.cs" />
     <Compile Include="Plugin\PluginInfo.cs" />
     <Compile Include="Plugin\PluginManager.cs" />
+    <Compile Include="Plugin\PluginParametersDisplayType.cs" />
+    <Compile Include="Plugin\PluginParametersDisplayTypeExtensions.cs" />
     <Compile Include="Plugin\PluginType.cs" />
     <Compile Include="Data\Obfuscation.cs" />
     <Compile Include="Data\ObfuscationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\JObjectHelper.cs" />
     <Compile Include="Utilities\NativeMethods.cs" />
     <Compile Include="Utilities\PathHelper.cs" />
+    <Compile Include="Utilities\ProjectLoader.cs" />
     <Compile Include="Utilities\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -54,7 +54,7 @@ namespace QuantumBuilder.Forms
                 if (!Directory.Exists(buildPath))
                         Directory.CreateDirectory(buildPath);
 
-                var pluginInfo = PluginManager.Instance.GetPluginInfoByName(Project.Obfuscation.ProfileName);
+                var pluginInfo = PluginManager.Instance.GetPluginInfoByName(Project.Obfuscation.PluginName);
                 if (pluginInfo != null)
                 {
                     activePlugin = pluginInfo.Plugin;
@@ -81,7 +81,7 @@ namespace QuantumBuilder.Forms
             {
                 Log("signing", "Signing started...");
 
-                var pluginInfo = PluginManager.Instance.GetPluginInfoByName(Project.Signing.ProfileName);
+                var pluginInfo = PluginManager.Instance.GetPluginInfoByName(Project.Signing.PluginName);
                 if (pluginInfo != null)
                 {
                     activePlugin = pluginInfo.Plugin;

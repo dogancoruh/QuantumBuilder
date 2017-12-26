@@ -16,6 +16,7 @@ namespace QuantumBuilder.Signing.KeystoreSigner
         public override string DisplayName => "Keystore Signer (Registered certificates and USB dongles)";
         public override string Description => "Keystore Signer Plugin";
         public override PluginType Type => PluginType.Signing;
+        public override PluginParametersDisplayType ParametersDisplayType => PluginParametersDisplayType.List;
 
         public override GenericPropertyCollection GetProperties()
         {

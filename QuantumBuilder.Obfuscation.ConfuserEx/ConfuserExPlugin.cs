@@ -19,6 +19,8 @@ namespace QuantumBuilder.Obfuscation.ConfuserEx
         public override string DisplayName => "ConfuserEx";
         public override string Description => "ConfuserEx Obfuscation Plugin";
         public override PluginType Type => PluginType.Obfuscation;
+        public override PluginParametersDisplayType ParametersDisplayType => PluginParametersDisplayType.List;
+
 
         private Process process;
 
@@ -147,7 +149,7 @@ namespace QuantumBuilder.Obfuscation.ConfuserEx
             ConfuserExProjectBuilder.CreateProjectFile(obfuscationProjectFileName,
                                                        obfuscationOutputPath,
                                                        project.ProjectPath,
-                                                       project.Obfuscation.ProfileParameters,
+                                                       project.Obfuscation.PluginParameters,
                                                        project.Obfuscation.Items);
 
             // execute with ConfuserEx

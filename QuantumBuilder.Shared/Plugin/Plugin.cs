@@ -20,6 +20,13 @@ namespace QuantumBuilder.Shared.Plugin
 
         public virtual PluginType Type { get; }
 
+        public virtual PluginParametersDisplayType ParametersDisplayType { get; set; }
+
+        public Plugin()
+        {
+            
+        }
+
         public virtual GenericPropertyCollection GetProperties()
         {
             throw new NotImplementedException();

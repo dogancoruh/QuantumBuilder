@@ -15,6 +15,7 @@ namespace QuantumBuilder.Signing.CertificateSigner
         public override string DisplayName => "Certificate Signer (.pfx and other certificates)";
         public override string Description => "Certificate Signer Plugin";
         public override PluginType Type => PluginType.Signing;
+        public override PluginParametersDisplayType ParametersDisplayType => PluginParametersDisplayType.List;
 
         public override GenericPropertyCollection GetProperties()
         {
