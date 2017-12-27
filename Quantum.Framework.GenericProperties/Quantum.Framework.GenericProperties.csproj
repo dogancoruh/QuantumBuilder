@@ -62,6 +62,9 @@
     <Compile Include="GenericPropertyListControl\Controls\GenericPropertyListControl.Designer.cs">
       <DependentUpon>GenericPropertyListControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="GenericPropertyListControl\Controls\PlaceholderTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GenericPropertyListControl\Data\ButtonInfo.cs" />
     <Compile Include="GenericPropertyListControl\Data\ControlInfo.cs" />
     <Compile Include="GenericPropertyListControl\Data\GenericPropertyListOptions.cs" />

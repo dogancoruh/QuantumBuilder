@@ -112,12 +112,12 @@ namespace GenericPropertiesListControlTest
             });
 
             genericPropertyListControl1.Properties = properties;
-            genericPropertyListControl1.Refresh();
+            genericPropertyListControl1.RefreshItems();
         }
 
         private void genericPropertyListControl1_OnPropertyValueChanged(object sender, Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Events.PropertyValueChangeEventArgs e)
         {
-            listBox1.Items.Add(e.Property.Name + " " + e.Property.Value);
+            //listBox1.Items.Add(e.Property.Name + " " + e.Property.Value);
         }
 
         private void button1_Click(object sender, EventArgs e)

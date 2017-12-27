@@ -15,6 +15,7 @@ using Quantum.Framework.GenericProperties.Enum;
 using Quantum.Framework.GenericProperties.Data;
 using Quantum.Framework.GenericProperties.GenericPropertyListControl.Enum;
 using Quantum.Framework.GenericProperties.GenericPropertyListControl.Data;
+using Quantum.Framework.GenericProperties.GenericPropertyListControl.Controls;
 
 namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl
 {
@@ -75,13 +76,21 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
             Margin = new Padding(0);
             Padding = new Padding(0);
-            AutoScroll = true;
+
+            AutoScroll = false;
             AutoScrollMargin = new Size(0, 0);
             AutoScrollMinSize = new Size(0, 0);
+            AutoScroll = true;
 
             Options = new GenericPropertyListOptions();
 
             Layout += GenericPropertyListControl_Layout;
+            Resize += GenericPropertyListControl_Resize;
+        }
+
+        private void GenericPropertyListControl_Resize(object sender, EventArgs e)
+        {
+            LayoutControls();
         }
 
         private void GenericPropertyListControl_Layout(object sender, LayoutEventArgs e)
@@ -127,8 +136,13 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                 Controls.Add(categoryLabel);
                 layoutPropertyCategory.Label = categoryLabel;
 
+                var categoryWidth = Width - Options.CategoryLeftMargin - Options.CategoryRightMargin;
+
+                if (VerticalScroll.Visible)
+                    categoryWidth -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
+
                 categoryLabel.Location = new Point(Options.CategoryLeftMargin, yOffset + (Options.ItemHeight / 2 - categoryLabel.Height / 2));
-                categoryLabel.Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, categoryLabel.Height);
+                categoryLabel.Size = new Size(categoryWidth, categoryLabel.Height);
 
                 yOffset += categoryLabel.Height + (Options.ItemHeight / 2 - categoryLabel.Height / 2) + CATEGORY_TITLE_SEPERATOR_GAP;
 
@@ -136,7 +150,7 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                 var categorySeperator = new Panel()
                 {
                     Location = new Point(Options.CategoryLeftMargin, yOffset),
-                    Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, 1),
+                    Size = new Size(categoryWidth, 1),
                     BackColor = Color.Black,
                     Tag = new ItemControlInfo()
                     {
@@ -180,17 +194,21 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                     // edit
                     var itemEditWidth = Width - seperatorXOffset - Options.ItemRightMargin;
 
+                    if (VerticalScroll.Visible)
+                        itemEditWidth -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
+
                     switch (item.Type)
                     {
                         case GenericPropertyType.String:
-                            var editorString = new TextBox()
+                            var editorString = new PlaceholderTextBox()
                             {
                                 Text = Convert.ToString(item.Value),
                                 Tag = new ItemControlInfo()
                                 {
                                     ControlType = ControlType.ItemEdit,
                                     Property = item
-                                }
+                                },
+                                PlaceholderText = item.PlaceholderText
                             };
                             editorString.TextChanged += TextBox_TextChanged;
 
@@ -462,6 +480,9 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                 // edit
                 var itemEditWidth = Width - seperatorXOffset - Options.ItemRightMargin;
 
+                if (VerticalScroll.Visible)
+                    itemEditWidth -= SystemInformation.VerticalScrollBarWidth + Options.ItemRightMargin;
+
                 switch (item.Type)
                 {
                     case GenericPropertyType.String:
@@ -636,9 +657,6 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
                 yOffset += Options.ItemHeight;
             }
-
-            if (Options.AutoSize)
-                Height = yOffset;
         }
 
         public void RefreshItems()
@@ -705,16 +723,21 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
             {
                 if (layoutItem is LayoutPropertyCategory layoutPropertyCategory)
                 {
+                    var categoryWidth = Width - Options.CategoryLeftMargin - Options.CategoryRightMargin;
+
+                    if (VerticalScroll.Visible)
+                        categoryWidth -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
+
                     // layout category label
                     var categoryLabel = layoutPropertyCategory.Label;
                     categoryLabel.Location = new Point(Options.CategoryLeftMargin, yOffset + (Options.ItemHeight / 2 - categoryLabel.Height / 2));
-                    categoryLabel.Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, categoryLabel.Height);
+                    categoryLabel.Size = new Size(categoryWidth, categoryLabel.Height);
                     yOffset += categoryLabel.Height + (Options.ItemHeight / 2 - categoryLabel.Height / 2) + CATEGORY_TITLE_SEPERATOR_GAP;
 
                     // layout category seperator
                     var categorySeperator = layoutPropertyCategory.Seperator;
                     categorySeperator.Location = new Point(Options.CategoryLeftMargin, yOffset);
-                    categorySeperator.Size = new Size(Width - Options.CategoryLeftMargin - Options.CategoryRightMargin, 1);
+                    categorySeperator.Size = new Size(categoryWidth, 1);
                     yOffset += categorySeperator.Height + ITEM_OFFSET;
 
                     foreach (LayoutProperty layoutProperty in layoutPropertyCategory.Items)
@@ -725,6 +748,9 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
                         var itemEditWidth = Width - seperatorXOffset - Options.ItemRightMargin;
 
+                        if (VerticalScroll.Visible)
+                            itemEditWidth -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
+
                         var itemControl = layoutProperty.Control;
                         itemControl.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - itemControl.Size.Height / 2));
                         itemControl.Size = new Size(itemEditWidth, itemControl.Size.Height);
@@ -733,6 +759,8 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                     }
                 }
             }
+
+            yOffset += Options.CategoryBottomMargin;
 
             if (Options.AutoSize)
                 Height = yOffset;
@@ -758,6 +786,9 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
 
                     var itemEditWidth = Width - seperatorXOffset - Options.ItemRightMargin;
 
+                    if (VerticalScroll.Visible)
+                        itemEditWidth -= SystemInformation.VerticalScrollBarWidth + Options.ScrollBarPadding;
+
                     var itemControl = layoutProperty.Control;
                     itemControl.Location = new Point(seperatorXOffset, yOffset + (Options.ItemHeight / 2 - itemControl.Size.Height / 2));
                     itemControl.Size = new Size(itemEditWidth, itemControl.Size.Height);
@@ -765,6 +796,8 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
                     yOffset += Options.ItemHeight;
                 }
             }
+
+            yOffset += Options.CategoryBottomMargin;
 
             if (Options.AutoSize)
                 Height = yOffset;

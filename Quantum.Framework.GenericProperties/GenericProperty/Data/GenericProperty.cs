@@ -20,6 +20,7 @@ namespace Quantum.Framework.GenericProperties.Data
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public bool Browsable { get; set; }
+        public string PlaceholderText { get; set; }
 
         private GenericPropertyType type;
         public GenericPropertyType Type
@@ -98,7 +99,8 @@ namespace Quantum.Framework.GenericProperties.Data
                 MaximumValue = MaximumValue,
                 SeperatorType = SeperatorType,
                 PathDescription = PathDescription,
-                CanUserResetToDefaultValue = CanUserResetToDefaultValue
+                CanUserResetToDefaultValue = CanUserResetToDefaultValue,
+                PlaceholderText = PlaceholderText
             };
 
             if (EnumItems != null)

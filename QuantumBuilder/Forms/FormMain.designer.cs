@@ -32,8 +32,8 @@ namespace QuantumBuilder
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Data.GenericPropertyListOptions genericPropertyListOptions4 = new Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Data.GenericPropertyListOptions();
             Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Data.GenericPropertyListOptions genericPropertyListOptions3 = new Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Data.GenericPropertyListOptions();
+            Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Data.GenericPropertyListOptions genericPropertyListOptions4 = new Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Data.GenericPropertyListOptions();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -47,7 +47,6 @@ namespace QuantumBuilder
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
             this.groupBoxObfuscationOptions = new System.Windows.Forms.GroupBox();
-            this.genericPropertyCheckListBoxObfuscation = new Quantum.Framework.GenericProperties.Controls.GenericPropertyCheckListBox.Controls.GenericPropertyCheckListBox();
             this.comboBoxObfuscationProfile = new System.Windows.Forms.ComboBox();
             this.checkBoxObfuscation = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -62,13 +61,11 @@ namespace QuantumBuilder
             this.toolStripButtonAddSigningItemsFromFolder = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAddSigningItemsFromFolderSmart = new System.Windows.Forms.ToolStripButton();
             this.groupBoxSigningOptions = new System.Windows.Forms.GroupBox();
-            this.genericPropertyListControlSigning = new Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.GenericPropertyListControl();
             this.comboBoxSigningProfile = new System.Windows.Forms.ComboBox();
             this.checkBoxSigning = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBoxSetupItems = new System.Windows.Forms.GroupBox();
-            this.dataGridViewSetupItems = new System.Windows.Forms.DataGridView();
             this.toolStrip4 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -77,7 +74,6 @@ namespace QuantumBuilder
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
             this.groupBoxSetupOptions = new System.Windows.Forms.GroupBox();
-            this.genericPropertyListControlSetup = new Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.GenericPropertyListControl();
             this.comboBoxSetupProfile = new System.Windows.Forms.ComboBox();
             this.checkBoxSetup = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -108,6 +104,10 @@ namespace QuantumBuilder
             this.textBoxProjectPath = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.genericPropertyCheckListBoxObfuscation = new Quantum.Framework.GenericProperties.Controls.GenericPropertyCheckListBox.Controls.GenericPropertyCheckListBox();
+            this.genericPropertyListControlSigning = new Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.GenericPropertyListControl();
+            this.genericPropertyListControlSetup = new Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.GenericPropertyListControl();
+            this.dataGridViewSetupItems = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -124,12 +124,12 @@ namespace QuantumBuilder
             this.tabPage3.SuspendLayout();
             this.panel3.SuspendLayout();
             this.groupBoxSetupItems.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSetupItems)).BeginInit();
             this.toolStrip4.SuspendLayout();
             this.groupBoxSetupOptions.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSetupItems)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -280,18 +280,6 @@ namespace QuantumBuilder
             this.groupBoxObfuscationOptions.Text = "Obfuscation Options";
             this.groupBoxObfuscationOptions.Visible = false;
             // 
-            // genericPropertyCheckListBoxObfuscation
-            // 
-            this.genericPropertyCheckListBoxObfuscation.AutoSize = true;
-            this.genericPropertyCheckListBoxObfuscation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.genericPropertyCheckListBoxObfuscation.Location = new System.Drawing.Point(8, 21);
-            this.genericPropertyCheckListBoxObfuscation.Name = "genericPropertyCheckListBoxObfuscation";
-            this.genericPropertyCheckListBoxObfuscation.Properties = null;
-            this.genericPropertyCheckListBoxObfuscation.Size = new System.Drawing.Size(480, 120);
-            this.genericPropertyCheckListBoxObfuscation.TabIndex = 2;
-            this.genericPropertyCheckListBoxObfuscation.Values = null;
-            this.genericPropertyCheckListBoxObfuscation.OnPropertyValueChanged += new System.EventHandler<Quantum.Framework.GenericProperties.GenericPropertyCheckListBox.Events.PropertyValueChangedEventArgs>(this.genericPropertyCheckListBoxObfuscation_OnPropertyValueChanged);
-            // 
             // comboBoxObfuscationProfile
             // 
             this.comboBoxObfuscationProfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -347,9 +335,9 @@ namespace QuantumBuilder
             this.groupBoxSigningItems.Controls.Add(this.dataGridViewSigningItems);
             this.groupBoxSigningItems.Controls.Add(this.toolStrip3);
             this.groupBoxSigningItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxSigningItems.Location = new System.Drawing.Point(7, 47);
+            this.groupBoxSigningItems.Location = new System.Drawing.Point(7, 37);
             this.groupBoxSigningItems.Name = "groupBoxSigningItems";
-            this.groupBoxSigningItems.Size = new System.Drawing.Size(496, 336);
+            this.groupBoxSigningItems.Size = new System.Drawing.Size(496, 346);
             this.groupBoxSigningItems.TabIndex = 7;
             this.groupBoxSigningItems.TabStop = false;
             this.groupBoxSigningItems.Text = "Signing Items";
@@ -362,7 +350,7 @@ namespace QuantumBuilder
             this.dataGridViewSigningItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewSigningItems.Location = new System.Drawing.Point(3, 41);
             this.dataGridViewSigningItems.Name = "dataGridViewSigningItems";
-            this.dataGridViewSigningItems.Size = new System.Drawing.Size(490, 292);
+            this.dataGridViewSigningItems.Size = new System.Drawing.Size(490, 302);
             this.dataGridViewSigningItems.TabIndex = 7;
             // 
             // toolStrip3
@@ -443,45 +431,11 @@ namespace QuantumBuilder
             this.groupBoxSigningOptions.Location = new System.Drawing.Point(7, 7);
             this.groupBoxSigningOptions.Name = "groupBoxSigningOptions";
             this.groupBoxSigningOptions.Padding = new System.Windows.Forms.Padding(5);
-            this.groupBoxSigningOptions.Size = new System.Drawing.Size(496, 40);
+            this.groupBoxSigningOptions.Size = new System.Drawing.Size(496, 30);
             this.groupBoxSigningOptions.TabIndex = 6;
             this.groupBoxSigningOptions.TabStop = false;
             this.groupBoxSigningOptions.Text = "Signing Options";
             this.groupBoxSigningOptions.Visible = false;
-            // 
-            // genericPropertyListControlSigning
-            // 
-            this.genericPropertyListControlSigning.AutoScroll = true;
-            this.genericPropertyListControlSigning.BackColor = System.Drawing.Color.White;
-            this.genericPropertyListControlSigning.Location = new System.Drawing.Point(10, 22);
-            this.genericPropertyListControlSigning.Margin = new System.Windows.Forms.Padding(0);
-            this.genericPropertyListControlSigning.Name = "genericPropertyListControlSigning";
-            genericPropertyListOptions4.AutoSize = true;
-            genericPropertyListOptions4.CategoryBottomMargin = 7;
-            genericPropertyListOptions4.CategoryLeftMargin = 0;
-            genericPropertyListOptions4.CategoryRightMargin = 0;
-            genericPropertyListOptions4.CategorySeperatorColor = System.Drawing.Color.Silver;
-            genericPropertyListOptions4.CategorySeperatorHeight = 1;
-            genericPropertyListOptions4.CategoryTitleFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold);
-            genericPropertyListOptions4.CategoryTitleForeColor = System.Drawing.Color.Silver;
-            genericPropertyListOptions4.CategoryTitleHeight = 21;
-            genericPropertyListOptions4.CategoryTopMargin = 0;
-            genericPropertyListOptions4.ItemGap = 3;
-            genericPropertyListOptions4.ItemHeight = 21;
-            genericPropertyListOptions4.ItemLabelForeColor = System.Drawing.Color.Empty;
-            genericPropertyListOptions4.ItemLeftMargin = 0;
-            genericPropertyListOptions4.ItemRightMargin = 0;
-            genericPropertyListOptions4.ScrollBarPadding = 3;
-            genericPropertyListOptions4.SeperatorOffset = 40;
-            genericPropertyListOptions4.SeperatorOffsetType = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.SeperatorOffsetType.Percent;
-            genericPropertyListOptions4.SeperatorPadding = 5;
-            genericPropertyListOptions4.ViewMode = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.ViewMode.List;
-            this.genericPropertyListControlSigning.Options = genericPropertyListOptions4;
-            this.genericPropertyListControlSigning.Properties = null;
-            this.genericPropertyListControlSigning.Size = new System.Drawing.Size(475, 0);
-            this.genericPropertyListControlSigning.TabIndex = 1;
-            this.genericPropertyListControlSigning.Values = null;
-            this.genericPropertyListControlSigning.OnPropertyValueChanged += new System.EventHandler<Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Events.PropertyValueChangeEventArgs>(this.genericPropertyListControlSigning_OnPropertyValueChanged);
             // 
             // comboBoxSigningProfile
             // 
@@ -538,23 +492,12 @@ namespace QuantumBuilder
             this.groupBoxSetupItems.Controls.Add(this.dataGridViewSetupItems);
             this.groupBoxSetupItems.Controls.Add(this.toolStrip4);
             this.groupBoxSetupItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxSetupItems.Location = new System.Drawing.Point(7, 162);
+            this.groupBoxSetupItems.Location = new System.Drawing.Point(7, 37);
             this.groupBoxSetupItems.Name = "groupBoxSetupItems";
-            this.groupBoxSetupItems.Size = new System.Drawing.Size(496, 218);
+            this.groupBoxSetupItems.Size = new System.Drawing.Size(496, 343);
             this.groupBoxSetupItems.TabIndex = 7;
             this.groupBoxSetupItems.TabStop = false;
             this.groupBoxSetupItems.Text = "Setup Items";
-            // 
-            // dataGridViewSetupItems
-            // 
-            this.dataGridViewSetupItems.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridViewSetupItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridViewSetupItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewSetupItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewSetupItems.Location = new System.Drawing.Point(3, 41);
-            this.dataGridViewSetupItems.Name = "dataGridViewSetupItems";
-            this.dataGridViewSetupItems.Size = new System.Drawing.Size(490, 174);
-            this.dataGridViewSetupItems.TabIndex = 7;
             // 
             // toolStrip4
             // 
@@ -632,47 +575,11 @@ namespace QuantumBuilder
             this.groupBoxSetupOptions.Location = new System.Drawing.Point(7, 7);
             this.groupBoxSetupOptions.Name = "groupBoxSetupOptions";
             this.groupBoxSetupOptions.Padding = new System.Windows.Forms.Padding(5);
-            this.groupBoxSetupOptions.Size = new System.Drawing.Size(496, 155);
+            this.groupBoxSetupOptions.Size = new System.Drawing.Size(496, 30);
             this.groupBoxSetupOptions.TabIndex = 6;
             this.groupBoxSetupOptions.TabStop = false;
             this.groupBoxSetupOptions.Text = "Setup Options";
             this.groupBoxSetupOptions.Visible = false;
-            // 
-            // genericPropertyListControlSetup
-            // 
-            this.genericPropertyListControlSetup.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.genericPropertyListControlSetup.AutoScroll = true;
-            this.genericPropertyListControlSetup.BackColor = System.Drawing.Color.White;
-            this.genericPropertyListControlSetup.Location = new System.Drawing.Point(11, 20);
-            this.genericPropertyListControlSetup.Margin = new System.Windows.Forms.Padding(0);
-            this.genericPropertyListControlSetup.Name = "genericPropertyListControlSetup";
-            genericPropertyListOptions3.AutoSize = true;
-            genericPropertyListOptions3.CategoryBottomMargin = 7;
-            genericPropertyListOptions3.CategoryLeftMargin = 0;
-            genericPropertyListOptions3.CategoryRightMargin = 0;
-            genericPropertyListOptions3.CategorySeperatorColor = System.Drawing.Color.Silver;
-            genericPropertyListOptions3.CategorySeperatorHeight = 1;
-            genericPropertyListOptions3.CategoryTitleFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold);
-            genericPropertyListOptions3.CategoryTitleForeColor = System.Drawing.Color.Silver;
-            genericPropertyListOptions3.CategoryTitleHeight = 21;
-            genericPropertyListOptions3.CategoryTopMargin = 0;
-            genericPropertyListOptions3.ItemGap = 3;
-            genericPropertyListOptions3.ItemHeight = 21;
-            genericPropertyListOptions3.ItemLabelForeColor = System.Drawing.Color.Empty;
-            genericPropertyListOptions3.ItemLeftMargin = 0;
-            genericPropertyListOptions3.ItemRightMargin = 0;
-            genericPropertyListOptions3.ScrollBarPadding = 3;
-            genericPropertyListOptions3.SeperatorOffset = 40;
-            genericPropertyListOptions3.SeperatorOffsetType = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.SeperatorOffsetType.Percent;
-            genericPropertyListOptions3.SeperatorPadding = 5;
-            genericPropertyListOptions3.ViewMode = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.ViewMode.CategoryList;
-            this.genericPropertyListControlSetup.Options = genericPropertyListOptions3;
-            this.genericPropertyListControlSetup.Properties = null;
-            this.genericPropertyListControlSetup.Size = new System.Drawing.Size(474, 0);
-            this.genericPropertyListControlSetup.TabIndex = 1;
-            this.genericPropertyListControlSetup.Values = null;
             // 
             // comboBoxSetupProfile
             // 
@@ -956,6 +863,99 @@ namespace QuantumBuilder
             this.label1.TabIndex = 0;
             this.label1.Text = "Project Directory";
             // 
+            // genericPropertyCheckListBoxObfuscation
+            // 
+            this.genericPropertyCheckListBoxObfuscation.AutoSize = true;
+            this.genericPropertyCheckListBoxObfuscation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.genericPropertyCheckListBoxObfuscation.Location = new System.Drawing.Point(8, 21);
+            this.genericPropertyCheckListBoxObfuscation.Name = "genericPropertyCheckListBoxObfuscation";
+            this.genericPropertyCheckListBoxObfuscation.Properties = null;
+            this.genericPropertyCheckListBoxObfuscation.Size = new System.Drawing.Size(480, 120);
+            this.genericPropertyCheckListBoxObfuscation.TabIndex = 2;
+            this.genericPropertyCheckListBoxObfuscation.Values = null;
+            this.genericPropertyCheckListBoxObfuscation.OnPropertyValueChanged += new System.EventHandler<Quantum.Framework.GenericProperties.GenericPropertyCheckListBox.Events.PropertyValueChangedEventArgs>(this.genericPropertyCheckListBoxObfuscation_OnPropertyValueChanged);
+            // 
+            // genericPropertyListControlSigning
+            // 
+            this.genericPropertyListControlSigning.AutoScroll = true;
+            this.genericPropertyListControlSigning.BackColor = System.Drawing.Color.White;
+            this.genericPropertyListControlSigning.Dock = System.Windows.Forms.DockStyle.Top;
+            this.genericPropertyListControlSigning.Location = new System.Drawing.Point(5, 18);
+            this.genericPropertyListControlSigning.Margin = new System.Windows.Forms.Padding(0);
+            this.genericPropertyListControlSigning.Name = "genericPropertyListControlSigning";
+            genericPropertyListOptions3.AutoSize = true;
+            genericPropertyListOptions3.CategoryBottomMargin = 7;
+            genericPropertyListOptions3.CategoryLeftMargin = 0;
+            genericPropertyListOptions3.CategoryRightMargin = 0;
+            genericPropertyListOptions3.CategorySeperatorColor = System.Drawing.Color.Silver;
+            genericPropertyListOptions3.CategorySeperatorHeight = 1;
+            genericPropertyListOptions3.CategoryTitleFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold);
+            genericPropertyListOptions3.CategoryTitleForeColor = System.Drawing.Color.Silver;
+            genericPropertyListOptions3.CategoryTitleHeight = 21;
+            genericPropertyListOptions3.CategoryTopMargin = 0;
+            genericPropertyListOptions3.ItemGap = 3;
+            genericPropertyListOptions3.ItemHeight = 21;
+            genericPropertyListOptions3.ItemLabelForeColor = System.Drawing.Color.Empty;
+            genericPropertyListOptions3.ItemLeftMargin = 0;
+            genericPropertyListOptions3.ItemRightMargin = 0;
+            genericPropertyListOptions3.ScrollBarPadding = 3;
+            genericPropertyListOptions3.SeperatorOffset = 40;
+            genericPropertyListOptions3.SeperatorOffsetType = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.SeperatorOffsetType.Percent;
+            genericPropertyListOptions3.SeperatorPadding = 5;
+            genericPropertyListOptions3.ViewMode = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.ViewMode.List;
+            this.genericPropertyListControlSigning.Options = genericPropertyListOptions3;
+            this.genericPropertyListControlSigning.Properties = null;
+            this.genericPropertyListControlSigning.Size = new System.Drawing.Size(486, 7);
+            this.genericPropertyListControlSigning.TabIndex = 1;
+            this.genericPropertyListControlSigning.Values = null;
+            this.genericPropertyListControlSigning.OnPropertyValueChanged += new System.EventHandler<Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Events.PropertyValueChangeEventArgs>(this.genericPropertyListControlSigning_OnPropertyValueChanged);
+            // 
+            // genericPropertyListControlSetup
+            // 
+            this.genericPropertyListControlSetup.AutoScroll = true;
+            this.genericPropertyListControlSetup.BackColor = System.Drawing.Color.White;
+            this.genericPropertyListControlSetup.Dock = System.Windows.Forms.DockStyle.Top;
+            this.genericPropertyListControlSetup.Location = new System.Drawing.Point(5, 18);
+            this.genericPropertyListControlSetup.Margin = new System.Windows.Forms.Padding(0);
+            this.genericPropertyListControlSetup.MaximumSize = new System.Drawing.Size(0, 170);
+            this.genericPropertyListControlSetup.Name = "genericPropertyListControlSetup";
+            genericPropertyListOptions4.AutoSize = true;
+            genericPropertyListOptions4.CategoryBottomMargin = 7;
+            genericPropertyListOptions4.CategoryLeftMargin = 0;
+            genericPropertyListOptions4.CategoryRightMargin = 0;
+            genericPropertyListOptions4.CategorySeperatorColor = System.Drawing.Color.Silver;
+            genericPropertyListOptions4.CategorySeperatorHeight = 1;
+            genericPropertyListOptions4.CategoryTitleFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold);
+            genericPropertyListOptions4.CategoryTitleForeColor = System.Drawing.Color.Silver;
+            genericPropertyListOptions4.CategoryTitleHeight = 21;
+            genericPropertyListOptions4.CategoryTopMargin = 0;
+            genericPropertyListOptions4.ItemGap = 3;
+            genericPropertyListOptions4.ItemHeight = 21;
+            genericPropertyListOptions4.ItemLabelForeColor = System.Drawing.Color.Empty;
+            genericPropertyListOptions4.ItemLeftMargin = 0;
+            genericPropertyListOptions4.ItemRightMargin = 0;
+            genericPropertyListOptions4.ScrollBarPadding = 3;
+            genericPropertyListOptions4.SeperatorOffset = 40;
+            genericPropertyListOptions4.SeperatorOffsetType = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.SeperatorOffsetType.Percent;
+            genericPropertyListOptions4.SeperatorPadding = 5;
+            genericPropertyListOptions4.ViewMode = Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.Enum.ViewMode.CategoryList;
+            this.genericPropertyListControlSetup.Options = genericPropertyListOptions4;
+            this.genericPropertyListControlSetup.Properties = null;
+            this.genericPropertyListControlSetup.Size = new System.Drawing.Size(486, 7);
+            this.genericPropertyListControlSetup.TabIndex = 1;
+            this.genericPropertyListControlSetup.Values = null;
+            // 
+            // dataGridViewSetupItems
+            // 
+            this.dataGridViewSetupItems.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewSetupItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridViewSetupItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewSetupItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewSetupItems.Location = new System.Drawing.Point(3, 41);
+            this.dataGridViewSetupItems.Name = "dataGridViewSetupItems";
+            this.dataGridViewSetupItems.Size = new System.Drawing.Size(490, 299);
+            this.dataGridViewSetupItems.TabIndex = 9;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -998,7 +998,6 @@ namespace QuantumBuilder
             this.panel3.PerformLayout();
             this.groupBoxSetupItems.ResumeLayout(false);
             this.groupBoxSetupItems.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSetupItems)).EndInit();
             this.toolStrip4.ResumeLayout(false);
             this.toolStrip4.PerformLayout();
             this.groupBoxSetupOptions.ResumeLayout(false);
@@ -1008,6 +1007,7 @@ namespace QuantumBuilder
             this.toolStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSetupItems)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1077,7 +1077,6 @@ namespace QuantumBuilder
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.GroupBox groupBoxSetupItems;
-        private System.Windows.Forms.DataGridView dataGridViewSetupItems;
         private System.Windows.Forms.ToolStrip toolStrip4;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
@@ -1089,6 +1088,7 @@ namespace QuantumBuilder
         private Quantum.Framework.GenericProperties.Controls.GenericPropertyListControl.GenericPropertyListControl genericPropertyListControlSetup;
         private System.Windows.Forms.ComboBox comboBoxSetupProfile;
         private System.Windows.Forms.CheckBox checkBoxSetup;
+        private System.Windows.Forms.DataGridView dataGridViewSetupItems;
     }
 }
 

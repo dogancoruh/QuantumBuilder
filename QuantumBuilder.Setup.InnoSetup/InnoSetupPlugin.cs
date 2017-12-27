@@ -15,7 +15,7 @@ namespace QuantumBuilder.Setup.InnoSetup
         public override string DisplayName => "Inno Setup";
         public override string Description => "Inno Setup Packager Plugin";
         public override PluginType Type => PluginType.Setup;
-        public override PluginParametersDisplayType ParametersDisplayType => PluginParametersDisplayType.List;
+        public override PluginParametersDisplayType ParametersDisplayType => PluginParametersDisplayType.CategoryList;
 
         public override GenericPropertyCollection GetProperties()
         {
@@ -29,7 +29,8 @@ namespace QuantumBuilder.Setup.InnoSetup
                     Name = "appPublisher",
                     DisplayName = "Application Publisher",
                     Type = GenericPropertyType.String,
-                    DefaultValue = string.Empty
+                    DefaultValue = string.Empty,
+                    PlaceholderText = "Publisher name"
                 },
                 new GenericProperty()
                 {
@@ -39,7 +40,8 @@ namespace QuantumBuilder.Setup.InnoSetup
                     Name = "appPublisherUrl",
                     DisplayName = "Application Publisher URL",
                     Type = GenericPropertyType.String,
-                    DefaultValue = string.Empty
+                    DefaultValue = string.Empty,
+                    PlaceholderText = "Publisher website URL"
                 },
                 new GenericProperty()
                 {
