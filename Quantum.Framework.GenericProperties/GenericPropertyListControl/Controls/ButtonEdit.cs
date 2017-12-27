@@ -87,13 +87,14 @@ namespace Quantum.Framework.GenericProperties.Controls.GenericPropertyListContro
             {
                 var button = new Button()
                 {
-                    Dock = DockStyle.Right,
                     Text = buttonInfo.Text,
                     Image = buttonInfo.Image,
-                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    AutoSize = true,
                     Margin = Padding.Empty,
-                    Padding = Padding.Empty
+                    Padding = Padding.Empty,
+                    Top = -1,
+                    Width = 30,
+                    Height = panel.Height + 2,
+                    TabStop = false
                 };
 
                 button.Click += Button_Click;

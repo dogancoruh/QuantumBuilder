@@ -70,7 +70,7 @@ namespace QuantumBuilder.Setup.InnoSetup
                     CategoryDisplayName = "Application",
                     Name = "defaultDirName",
                     DisplayName = "Default Application Directory",
-                    Type = GenericPropertyType.String,
+                    Type = GenericPropertyType.Path,
                     DefaultValue = string.Empty
                 },
                 new GenericProperty()
